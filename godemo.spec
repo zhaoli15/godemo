@@ -34,21 +34,11 @@ install -p -D -m 755 ${GOPATH}/bin/%{godemo_binname} \
 install -p -D -m 755 %{godemo_srcdir}/conf/config.json \
 %{buildroot}/%{godemo_homedir}/conf/config.json
 install -p -D -m 755 %{godemo_srcdir}/%{name}.service \
-%{buildroot}/%{_initddir}/%{name}
+%{buildroot}/%{godemo_homedir}/bin/%{name}.sh
 
 %post
-/sbin/chkconfig --add %{name}
 
 %preun
-if [ $1 = 0 ];then
-    /sbin/service %{name} stop
-    /sbin/chkconfig --del %{name}
-fi
-
-%postun
-if [ "$1" -ge "1" ];then
-    /sbin/service %{name} restart > /dev/null 2>&1 
-fi
 
 
 %clean
@@ -58,4 +48,4 @@ fi
 %{godemo_homedir}/bin/%{name}
 %config(noreplace) %{godemo_homedir}/conf/config.json
 %dir %attr(0755,root,root) %{godemo_homedir}/logs/
-%{_initddir}/%{name}
+%{godemo_homedir}/bin/%{name}.sh
