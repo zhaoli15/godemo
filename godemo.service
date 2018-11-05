@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# chkconfig: 345 99 01
+# description: load godemo config sync
+
+apppath=/opt/app/godemo
+binfile=${apppath}/bin/godemo
+logfile=${apppath}/logs/stderr.log
+ARGS="-configFilePath ${apppath}/conf/config.json"
+
+start(){
+    echo "Starting godemo..."
+    /bin/sh -c "${binfile} $ARGS > ${logfile} 2>&1 &"
+    return $?
+}
+
+stop(){
+    echo "Stoping godemo..."
+    pid=$(ps -ef | grep $binfile | grep -v grep | awk '{print $2}')
+    if [ "$pid" != "" ];then
+      kill -9 $pid
+    fi
+    return $?
+}
+
+status(){
+    pid=$(ps -ef | grep $binfile | grep -v grep |awk '{print $2}')
+    if [ "$pid" != "" ] ;then
+      echo "${binfile} is running"
+    else
+      echo "${binfile} is stopped"
+    fi
+}
+
+success(){
+    echo "operation succeeded..."
+}
+
+failure(){
+    echo "operation failed..."
+}
+
+case $1 in
+    restart)
+        stop && success || failure
+        start && success || failure
+        ;;
+
+    start)
+        start && success || failure
+        ;;
+
+    stop)
+        stop && success || failure
+        ;;
+
+    status)
+        status
+        ;;
+
+    *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 3
+        ;;
+esac
