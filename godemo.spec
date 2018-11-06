@@ -1,6 +1,6 @@
 Name:       godemo
-Version:    1.0
-Release:    325789
+Version:    ${version}
+Release:    ${release}
 Summary:    load godemo config manager
 License: GPL
 
