@@ -12,6 +12,7 @@ import (
 var (
 	server         string
 	port           string
+	dbsource       string
 	configFilePath = flag.String("configFilePath", "/work/code/gopath/src/godemo/conf/config.json", "config file path")
 )
 
@@ -32,6 +33,7 @@ func main() {
 	}
 	server = config.Server
 	port = config.Port
+	dbsource=config.DbSource
 
 	StartServer()
 }
@@ -66,12 +68,12 @@ func proQry(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	id := r.Form["id"][0]
 
-	db, err := sql.Open("mysql", "zhaoli:zhaoli@tcp(192.168.56.101:3306)/zhaoli?charset=utf8")
+	db, err := sql.Open("mysql", dbsource)
 	if err != nil {
 		fmt.Println("open db err:" + err.Error())
 	}
 
-	rows, err := db.Query("select id,name,age,sex,address from user where id=?", id)
+	rows, err := db.Query("select id,name,age,sex,address from test_user where id=?", id)
 	if err != nil {
 		fmt.Println("query db err: " + err.Error())
 	}
